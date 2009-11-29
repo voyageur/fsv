@@ -4,11 +4,10 @@ AM_CFLAGS = @GTK_CFLAGS@
 
 noinst_HEADERS = \
 	gnome-i18nP.h \
-	gnome-color-picker.h \
 	gnome-dateedit.h \
 	getopt.h \
 	nvstore.h
-libgnomeui_a_SOURCES = gnome-color-picker.c gnome-dateedit.c
+libgnomeui_a_SOURCES = gnome-dateedit.c
 libmisc_a_SOURCES = getopt.c getopt1.c nvstore.c
 
 EXTRA_DIST = README.gnome

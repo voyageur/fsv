@@ -25,7 +25,6 @@
 #include <gtk/gtk.h>
 #include "gui.h"
 
-#include "gnome-color-picker.h"
 #include "gnome-dateedit.h"
 
 #include "animation.h"
@@ -360,10 +359,13 @@ GtkWidget *
 gui_colorpicker_add( GtkWidget *parent_w, RGBcolor *init_color, const char *title, void (*callback)( ), void *callback_data )
 {
 	GtkWidget *colorpicker_w;
+	GdkColor color;
 
-	colorpicker_w = gnome_color_picker_new( );
-	gnome_color_picker_set_d( GNOME_COLOR_PICKER(colorpicker_w), init_color->r, init_color->g, init_color->b, 1.0 );
-	gnome_color_picker_set_title( GNOME_COLOR_PICKER(colorpicker_w), title );
+	color.red = (guint16) (init_color->r * 65535.0 + 0.5);
+	color.green = (guint16) (init_color->g * 65535.0 + 0.5);
+	color.blue = (guint16) (init_color->b * 65535.0 + 0.5);
+	colorpicker_w = gtk_color_button_new_with_color( &color );
+	gtk_color_button_set_title( GTK_COLOR_BUTTON(colorpicker_w), title );
 	gtk_signal_connect( GTK_OBJECT(colorpicker_w), "color_set", GTK_SIGNAL_FUNC(color_picker_cb), callback_data );
 	gtk_object_set_data( GTK_OBJECT(colorpicker_w), "user_callback", (void *)callback );
 	parent_child( parent_w, colorpicker_w );
@@ -374,9 +376,15 @@ gui_colorpicker_add( GtkWidget *parent_w, RGBcolor *init_color, const char *titl
 
 /* Sets the color on a color picker widget */
 void
-gui_colorpicker_set_color( GtkWidget *colorpicker_w, RGBcolor *color )
+gui_colorpicker_set_color( GtkWidget *colorpicker_w, RGBcolor *new_color )
 {
-	gnome_color_picker_set_d( GNOME_COLOR_PICKER(colorpicker_w), color->r, color->g, color->b, 0.0 );
+	GdkColor color;
+
+	color.red = (guint16) (new_color->r * 65535.0 + 0.5);
+	color.green = (guint16) (new_color->g * 65535.0 + 0.5);
+	color.blue = (guint16) (new_color->b * 65535.0 + 0.5);
+
+	gtk_color_button_set_color( GTK_COLOR_BUTTON(colorpicker_w), &color );
 }
 
 
@@ -601,7 +609,7 @@ gui_keybind( GtkWidget *widget, char *keystroke )
 
 	if (GTK_IS_WINDOW(widget)) {
 		/* Attach keybindings */
-		gtk_accel_group_attach( accel_group, GTK_OBJECT(widget) );
+		gtk_window_add_accel_group( GTK_WINDOW(widget), accel_group );
 		accel_group = NULL;
 		return;
 	}
@@ -1077,11 +1085,14 @@ gui_text_area_add( GtkWidget *parent_w, const char *init_text )
 	GtkWidget *text_area_w;
 
 	/* Text (area) widget */
-	text_area_w = gtk_text_new( NULL, NULL );
-	gtk_text_set_editable( GTK_TEXT(text_area_w), FALSE );
-	gtk_text_set_word_wrap( GTK_TEXT(text_area_w), TRUE );
-	if (init_text != NULL)
-		gtk_text_insert( GTK_TEXT(text_area_w), NULL, NULL, NULL, init_text, -1 );
+	text_area_w = gtk_text_view_new( );
+	gtk_text_view_set_editable( GTK_TEXT_VIEW(text_area_w), FALSE );
+	gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW(text_area_w), GTK_WRAP_WORD_CHAR );
+	if (init_text != NULL) {
+		GtkTextBuffer *text_buffer;
+		text_buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW(text_area_w) );
+		gtk_text_buffer_insert_at_cursor( text_buffer, init_text, -1 );
+	}
 	parent_child( parent_w, text_area_w );
 
 	return text_area_w;
@@ -1162,7 +1173,7 @@ gui_dialog_window( const char *title, void (*close_callback)( ) )
 {
 	GtkWidget *window_w;
 
-	window_w = gtk_window_new( GTK_WINDOW_DIALOG );
+	window_w = gtk_window_new( GTK_WINDOW_TOPLEVEL );
 	gtk_window_set_policy( GTK_WINDOW(window_w), FALSE, FALSE, FALSE );
 	gtk_window_set_position( GTK_WINDOW(window_w), GTK_WIN_POS_CENTER );
 	gtk_window_set_title( GTK_WINDOW(window_w), title );

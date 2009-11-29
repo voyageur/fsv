@@ -928,7 +928,7 @@ g_list_replace( GList *list, gpointer old_data, gpointer new_data )
  * element "before_data". If "before_data" is NULL, then the new element is
  * added to the end of the list. Returns the updated list */
 GList *
-g_list_insert_before( GList *list, gpointer before_data, gpointer data )
+g_list_insert_before_element( GList *list, gpointer before_data, gpointer data )
 {
 	GList *before_llink;
 	GList *new_llink;

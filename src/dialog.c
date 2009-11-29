@@ -689,7 +689,7 @@ csdialog_wpattern_clist_row_move_cb( GtkWidget *clist_w, int source_row, int des
 		/* Move color group to new position */
 #define WPGROUP_LIST csdialog.color_config.by_wpattern.wpgroup_list
 		G_LIST_REMOVE(WPGROUP_LIST, source_row_data->wpgroup);
-		G_LIST_INSERT_BEFORE(WPGROUP_LIST, dest_row_data->wpgroup, source_row_data->wpgroup);
+		G_LIST_INSERT_BEFORE_ELEMENT(WPGROUP_LIST, dest_row_data->wpgroup, source_row_data->wpgroup);
 #undef WPGROUP_LIST
 		/* Update list */
 		csdialog_wpattern_clist_populate( );
@@ -718,7 +718,7 @@ csdialog_wpattern_clist_row_move_cb( GtkWidget *clist_w, int source_row, int des
 #define S_SIBLINGS source_row_data->wpgroup->wp_list
 #define D_SIBLINGS dest_row_data->wpgroup->wp_list
 			G_LIST_REMOVE(S_SIBLINGS, source_row_data->wpattern);
-			G_LIST_INSERT_BEFORE(D_SIBLINGS, dest_row_data->wpattern, source_row_data->wpattern);
+			G_LIST_INSERT_BEFORE_ELEMENT(D_SIBLINGS, dest_row_data->wpattern, source_row_data->wpattern);
 #undef S_SIBLINGS
 #undef D_SIBLINGS
 			if (source_row_data->wpgroup != dest_row_data->wpgroup) {
@@ -763,7 +763,7 @@ csdialog_wpattern_new_color_selection_cb( RGBcolor *selected_color, struct WPLis
 
 #define WPGROUP_LIST csdialog.color_config.by_wpattern.wpgroup_list
 	if (place_before_existing_group)
-		G_LIST_INSERT_BEFORE(WPGROUP_LIST, row_data->wpgroup, wpgroup);
+		G_LIST_INSERT_BEFORE_ELEMENT(WPGROUP_LIST, row_data->wpgroup, wpgroup);
 	else {
 		G_LIST_APPEND(WPGROUP_LIST, wpgroup);
 		/* Scroll clist to bottom (to make new group visible) */

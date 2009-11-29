@@ -98,7 +98,7 @@
 /* Convenience macros */
 #define G_LIST_PREPEND(l,d)	l = g_list_prepend( l, d )
 #define G_LIST_APPEND(l,d)	l = g_list_append( l, d )
-#define G_LIST_INSERT_BEFORE(l,bd,d)	l = g_list_insert_before( l, bd, d )
+#define G_LIST_INSERT_BEFORE_ELEMENT(l,bd,d)	l = g_list_insert_before_element( l, bd, d )
 #define G_LIST_REMOVE(l,d)	l = g_list_remove( l, d )
 #define G_LIST_SORT(l,f)	l = g_list_sort( l, (GCompareFunc)f )
 #define NEW(type)		(type *)xmalloc( sizeof(type) )
@@ -323,7 +323,7 @@ RGBcolor hex2rgb( const char *hex_color );
 RGBcolor rainbow_color( double x );
 RGBcolor heat_color( double x );
 GList *g_list_replace( GList *list, gpointer old_data, gpointer new_data );
-GList *g_list_insert_before( GList *list, gpointer before_data, gpointer data );
+GList *g_list_insert_before_element( GList *list, gpointer before_data, gpointer data );
 int gnome_config_get_token( const char *path, const char **tokens );
 void gnome_config_set_token( const char *path, int new_value, const char **tokens );
 void quit( char *message );
