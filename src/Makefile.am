@@ -6,7 +6,7 @@ DEBUG_CFLAGS =
 DEBUG_LIBS =
 endif
 
-INCLUDES = \
+AM_CFLAGS = \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DDOCDIR=\"$(docdir)\" \
 	-I$(top_srcdir)/lib \

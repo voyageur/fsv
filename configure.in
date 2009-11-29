@@ -1,16 +1,14 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT(src/fsv.c)
-AM_CONFIG_HEADER(config.h)
-
-PACKAGE=fsv
-VERSION=0.9
+AC_INIT(fsv, 0.9)
+AC_CONFIG_SRCDIR(src/fsv.c)
+AC_CONFIG_HEADERS(config.h)
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 RELEASE=1
-
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 AC_SUBST(RELEASE)
 
-AC_DEFINE(_GNU_SOURCE)
-AC_DEFINE(GTK_DISABLE_COMPAT_H)
+AC_USE_SYSTEM_EXTENSIONS
+AC_DEFINE(GTK_DISABLE_COMPAT_H, 1,
+  [Disable compatibility GTK+ definitions.])
 
 # Programs
 AC_PROG_CC
@@ -31,7 +29,7 @@ AC_TYPE_MODE_T
 AC_TYPE_UID_T
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
-AC_CHECK_TYPE(comparison_fn_t, int (*)( const void *, const void * ))
+dnl AC_CHECK_TYPE(comparison_fn_t, [int (*)( const void *, const void * )])
 AC_STRUCT_ST_BLOCKS
 AC_STRUCT_TM
 
@@ -47,18 +45,19 @@ AC_ARG_ENABLE(debug, [  --enable-debug          turn on debugging])
 if test "$enable_debug" = "yes" ; then
 	AC_MSG_WARN([debugging enabled, CFLAGS=\"$CFLAGS\"])
 	AM_CONDITIONAL(DEBUG, true)
-	AC_DEFINE(DEBUG)
-	AC_DEFINE(G_ENABLE_DEBUG)
+	AC_DEFINE(DEBUG, 1, [Activate debug features.])
+	AC_DEFINE(G_ENABLE_DEBUG, 1, [Activate glib debug features.])
 else
 	AM_CONDITIONAL(DEBUG, false)
-	AC_DEFINE(G_DISABLE_ASSERT)
-	AC_DEFINE(G_DISABLE_CHECKS)
-	AC_DEFINE(GTK_NO_CHECK_CASTS)
+	AC_DEFINE(G_DISABLE_ASSERT, 1, [Disable assertions.])
+	AC_DEFINE(G_DISABLE_CHECKS, 1, [Disable checks.])
+	AC_DEFINE(GTK_NO_CHECK_CASTS, 1, [Don't check type casts.])
 fi
 
 # Internationalization
 ALL_LINGUAS=""
 AM_GNU_GETTEXT
+AM_GNU_GETTEXT_VERSION([0.17])
 
 # Locale directory
 AC_ARG_WITH(locale-dir, [  --with-locale-dir=DIR   install locale files in DIR [DATADIR/locale]])
@@ -154,8 +153,10 @@ AC_SUBST(GTKGL_LIBS)
 # Check for 'file' command
 AC_PATH_PROG(FILE_CMD, file)
 if test -n "$FILE_CMD" ; then
-	AC_DEFINE(HAVE_FILE_COMMAND)
-	AC_DEFINE_UNQUOTED(FILE_COMMAND, "$FILE_CMD %s")
+	AC_DEFINE(HAVE_FILE_COMMAND, 1,
+	  [Define if you have the 'file' command.])
+	AC_DEFINE_UNQUOTED(FILE_COMMAND, "$FILE_CMD %s",
+	  [How to invoke 'file'.])
 fi
 
 # That's a wrap!
