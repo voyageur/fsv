@@ -361,7 +361,7 @@ scanfs( const char *dir )
 
 	/* GUI stuff */
 	filelist_scan_monitor_init( );
-	handler_id = gtk_timeout_add( SCAN_MONITOR_PERIOD, (GtkFunction)scan_monitor, NULL );
+	handler_id = gtk_timeout_add( SCAN_MONITOR_PERIOD, (GSourceFunc)scan_monitor, NULL );
 
 	/* Let the disk thrashing begin */
 	process_dir( root_dir, root_dnode );

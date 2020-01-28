@@ -449,7 +449,7 @@ redraw( void )
 {
 	/* Ensure that animation loop is active */
 	if (!animation_active)
-		gtk_idle_add_priority( G_PRIORITY_LOW, (GtkFunction)animation_loop, NULL );
+		gtk_idle_add_priority( G_PRIORITY_LOW, (GSourceFunc)animation_loop, NULL );
 
 	animation_active = TRUE;
 	globals.need_redraw = TRUE;

@@ -465,7 +465,7 @@ gui_cursor( GtkWidget *widget, int glyph )
 
 	/* Don't need the old cursor anymore */
 	if (prev_cursor != NULL)
-		gdk_cursor_destroy( prev_cursor );
+		gdk_cursor_unref( prev_cursor );
 
 	if (glyph >= 0) {
 		/* Save new cursor information */
@@ -827,8 +827,8 @@ gui_pixmap_xpm_add( GtkWidget *parent_w, char **xpm_data )
 	style = gtk_widget_get_style( parent_w );
 	pixmap = gdk_pixmap_create_from_xpm_d( parent_w->window, &mask, &style->bg[GTK_STATE_NORMAL], xpm_data );
 	pixmap_w = gtk_pixmap_new( pixmap, mask );
-	gdk_pixmap_unref( pixmap );
-	gdk_bitmap_unref( mask );
+	g_object_unref( pixmap );
+	g_object_unref( mask );
 	parent_child( parent_w, pixmap_w );
 
 	return pixmap_w;
