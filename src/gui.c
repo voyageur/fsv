@@ -25,8 +25,6 @@
 #include <gtk/gtk.h>
 #include "gui.h"
 
-#include "gnome-dateedit.h"
-
 #include "animation.h"
 #include "ogl.h" /* ogl_widget_new( ) */
 
@@ -479,39 +477,6 @@ gui_cursor( GtkWidget *widget, int glyph )
 		gtk_object_remove_data( GTK_OBJECT(widget), "gui_cursor" );
 		gtk_object_remove_data( GTK_OBJECT(widget), "gui_glyph" );
 	}
-}
-
-
-/* The date edit widget (imported from Gnomeland). The given callback is
- * called whenever the date/time is changed */
-GtkWidget *
-gui_dateedit_add( GtkWidget *parent_w, time_t the_time, void (*callback)( ), void *callback_data )
-{
-	GtkWidget *dateedit_w;
-
-	dateedit_w = gnome_date_edit_new( the_time, TRUE, TRUE );
-	gnome_date_edit_set_popup_range( GNOME_DATE_EDIT(dateedit_w), 0, 23 );
-	gtk_signal_connect( GTK_OBJECT(dateedit_w), "date_changed", GTK_SIGNAL_FUNC(callback), callback_data );
-	gtk_signal_connect( GTK_OBJECT(dateedit_w), "time_changed", GTK_SIGNAL_FUNC(callback), callback_data );
-	parent_child( parent_w, dateedit_w );
-
-	return dateedit_w;
-}
-
-
-/* Reads current time from a date edit widget */
-time_t
-gui_dateedit_get_time( GtkWidget *dateedit_w )
-{
-	return gnome_date_edit_get_date( GNOME_DATE_EDIT(dateedit_w) );
-}
-
-
-/* Sets the time on a date edit widget */
-void
-gui_dateedit_set_time( GtkWidget *dateedit_w, time_t the_time )
-{
-	gnome_date_edit_set_time( GNOME_DATE_EDIT(dateedit_w), the_time );
 }
 
 

@@ -196,16 +196,6 @@ fsv_write_config( void )
 {
 
 /* #warning write fsv_write_config( ) */
-#if 0
-	/* Clean out old configuration information */
-	gnome_config_push_prefix( config_path_prefix( NULL ) );
-	gnome_config_clean_section( section_fsv );
-	gnome_config_pop_prefix( );
-
-	gnome_config_push_prefix( config_path_prefix( section_fsv ) );
-	gnome_config_set_token( key_fsv_mode, globals.fsv_mode, tokens_fsv_mode );
-	gnome_config_pop_prefix( );
-#endif /* 0 */
 }
 
 

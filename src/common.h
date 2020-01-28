@@ -313,8 +313,6 @@ RGBcolor rainbow_color( double x );
 RGBcolor heat_color( double x );
 GList *g_list_replace( GList *list, gpointer old_data, gpointer new_data );
 GList *g_list_insert_before_element( GList *list, gpointer before_data, gpointer data );
-int gnome_config_get_token( const char *path, const char **tokens );
-void gnome_config_set_token( const char *path, int new_value, const char **tokens );
 void quit( char *message );
 
 

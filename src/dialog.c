@@ -208,48 +208,6 @@ csdialog_node_type_color_picker_cb( RGBcolor *picked_color, RGBcolor *node_type_
 }
 
 
-/* Callback for the date edit widgets on the "By date/time" page */
-static void
-csdialog_time_edit_cb( GtkWidget *dateedit_w )
-{
-	time_t old_time, new_time;
-	time_t cur_time;
-
-	old_time = gui_dateedit_get_time( csdialog.time.old_dateedit_w );
-	new_time = gui_dateedit_get_time( csdialog.time.new_dateedit_w );
-	cur_time = time( NULL );
-
-	/* Check that neither time is in the future */
-	if (difftime( cur_time, new_time ) < 0.0)
-		new_time = cur_time;
-	if (difftime( cur_time, old_time ) < 0.0)
-		old_time = cur_time;
-
-	/* Check that old time is at least one minute before new time */
-	if (difftime( new_time, old_time ) < 60.0) {
-		if (dateedit_w == csdialog.time.old_dateedit_w)
-			new_time = old_time + (time_t)60;
-		else if (dateedit_w == csdialog.time.new_dateedit_w)
-			old_time = new_time - (time_t)60;
-		else {
-			g_assert_not_reached( );
-			return;
-		}
-	}
-
-	/* Reset old and new times */
-	gtk_signal_handler_block_by_func( GTK_OBJECT(csdialog.time.old_dateedit_w), csdialog_time_edit_cb, NULL );
-	gtk_signal_handler_block_by_func( GTK_OBJECT(csdialog.time.new_dateedit_w), csdialog_time_edit_cb, NULL );
-	gui_dateedit_set_time( csdialog.time.old_dateedit_w, old_time );
-	gui_dateedit_set_time( csdialog.time.new_dateedit_w, new_time );
-	gtk_signal_handler_unblock_by_func( GTK_OBJECT(csdialog.time.old_dateedit_w), csdialog_time_edit_cb, NULL );
-	gtk_signal_handler_unblock_by_func( GTK_OBJECT(csdialog.time.new_dateedit_w), csdialog_time_edit_cb, NULL );
-
-	csdialog.color_config.by_timestamp.old_time = old_time;
-	csdialog.color_config.by_timestamp.new_time = new_time;
-}
-
-
 /* Callback for the "Color by:" timestamp option menu */
 static void
 csdialog_time_timestamp_option_menu_cb( GtkWidget *omenu_item_w )
@@ -999,27 +957,11 @@ dialog_color_setup( void )
 	hbox_w = gui_hbox_add( vbox_w, 0 );
 	table_w = gui_table_add( hbox_w, 3, 2, FALSE, 4 );
 	gui_widget_packing( table_w, EXPAND, NO_FILL, AT_START );
-        /* Old label */
-	hbox2_w = gui_hbox_add( NULL, 0 );
-	gui_table_attach( table_w, hbox2_w, 0, 1, 0, 1 );
-	label_w = gui_label_add( hbox2_w, _("Oldest:") );
-	gui_widget_packing( label_w, NO_EXPAND, NO_FILL, AT_END );
-	/* New label */
-	hbox2_w = gui_hbox_add( NULL, 0 );
-	gui_table_attach( table_w, hbox2_w, 0, 1, 1, 2 );
-	label_w = gui_label_add( hbox2_w, _("Newest:") );
-	gui_widget_packing( label_w, NO_EXPAND, NO_FILL, AT_END );
 	/* Timestamp selection label */
 	hbox2_w = gui_hbox_add( NULL, 0 );
 	gui_table_attach( table_w, hbox2_w, 0, 1, 2, 3 );
 	label_w = gui_label_add( hbox2_w, _("Color by:") );
 	gui_widget_packing( label_w, NO_EXPAND, NO_FILL, AT_END );
-	/* Old date edit widget */
-	csdialog.time.old_dateedit_w = gui_dateedit_add( NULL, csdialog.color_config.by_timestamp.old_time, csdialog_time_edit_cb, NULL );
-        gui_table_attach( table_w, csdialog.time.old_dateedit_w, 1, 2, 0, 1 );
-	/* New date edit widget */
-	csdialog.time.new_dateedit_w = gui_dateedit_add( NULL, csdialog.color_config.by_timestamp.new_time, csdialog_time_edit_cb, NULL );
-        gui_table_attach( table_w, csdialog.time.new_dateedit_w, 1, 2, 1, 2 );
 	/* Timestamp selection option menu */
 	csdialog.time.access_omenu_item_w = gui_option_menu_item( _("Time of last access"), csdialog_time_timestamp_option_menu_cb, NULL );
 	csdialog.time.modify_omenu_item_w = gui_option_menu_item( _("Time of last modification"), csdialog_time_timestamp_option_menu_cb, NULL );
