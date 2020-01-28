@@ -227,12 +227,6 @@ main( int argc, char **argv )
 #ifdef DEBUG
 	debug_init( );
 #endif
-#ifdef ENABLE_NLS
-	/* Initialize internationalization (i8e i18n :-) */
-	setlocale( LC_ALL, "" );
-	bindtextdomain( PACKAGE, LOCALEDIR );
-	textdomain( PACKAGE );
-#endif
 
 	/* Parse command-line options */
 	for (;;) {

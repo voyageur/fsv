@@ -1,8 +1,8 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT(fsv, 0.9)
+AC_INIT(fsv, 0.10_rc2)
 AC_CONFIG_SRCDIR(src/fsv.c)
 AC_CONFIG_HEADERS(config.h)
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([-Wall])
 RELEASE=1
 AC_SUBST(RELEASE)
 
@@ -39,6 +39,7 @@ AC_FUNC_FNMATCH
 AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(getcwd gettimeofday mktime strcspn strdup strspn strtod strtoul)
 AC_REPLACE_FUNCS(scandir)
+AC_CHECK_LIB([m], [hypot])
 
 # Debugging
 AC_ARG_ENABLE(debug, [  --enable-debug          turn on debugging])
@@ -54,24 +55,6 @@ else
 	AC_DEFINE(GTK_NO_CHECK_CASTS, 1, [Don't check type casts.])
 fi
 
-# Internationalization
-ALL_LINGUAS=""
-AM_GNU_GETTEXT
-AM_GNU_GETTEXT_VERSION([0.17])
-
-# Locale directory
-AC_ARG_WITH(locale-dir, [  --with-locale-dir=DIR   install locale files in DIR [DATADIR/locale]])
-if test "$USE_NLS" = "yes" ; then
-	if test -n "$with_locale_dir" ; then
-		localedir=$with_locale_dir
-	else
-		localedir=${datadir}/locale
-	fi
-else
-	localedir="none"
-fi
-AC_SUBST(localedir)
-
 # Documentation directory
 AC_ARG_WITH(doc-dir, [  --with-doc-dir=DIR      install documentation files in DIR [DATADIR/fsv]])
 if test -n "$with_doc_dir" ; then
@@ -82,7 +65,8 @@ fi
 AC_SUBST(docdir)
 
 # GTK+ libraries
-PKG_CHECK_MODULES(GTK, gtk+-2.0)
+PKG_CHECK_MODULES([GTK], [gtk+-2.0])
+PKG_CHECK_MODULES([GLIB], [glib-2.0])
 
 #### OpenGL/Mesa3D libraries ####
 AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=PFX    Prefix where GL/MesaGL is installed (optional)])
@@ -98,7 +82,12 @@ else
 fi
 
 AC_CHECK_LIB(MesaGL, glBegin, have_MesaGL=yes, , $GTK_LIBS $GL_LDOPTS)
+AC_CHECK_HEADER(GL/glu.h, have_GLU="yes", have_GLU="no")
 AC_CHECK_LIB(GL,     glBegin, have_GL=yes,     , $GTK_LIBS $GL_LDOPTS)
+
+if test "$have_GLU" = "no" ; then
+                AC_MSG_ERROR([Missing OpenGL utility library])
+        fi
 
 if test "$with_lib_GL" = "yes" ; then
 	# Want to use '-lGL'
@@ -146,7 +135,5 @@ AC_OUTPUT(fsv.spec
 	Makefile
 	debug/Makefile
 	doc/Makefile
-	intl/Makefile
 	lib/Makefile
-	po/Makefile.in
 	src/Makefile)

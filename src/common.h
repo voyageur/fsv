@@ -46,19 +46,8 @@
 #include <glib.h>
 
 /* Internationalization */
-#ifdef ENABLE_NLS
-	#include <locale.h>
-	#include <libintl.h>
-	#define _(msgid) gettext(msgid)
-	#ifdef gettext_noop
-		#define __(msgid) gettext_noop(msgid)
-	#else
-		#define __(msgid) msgid
-	#endif
-#else /* not ENABLE_NLS */
-	#define _(string) string
-	#define __(string) string
-#endif /* not ENABLE_NLS */
+#define _(string) string
+#define __(string) string
 
 /* Debugging */
 #ifdef DEBUG
