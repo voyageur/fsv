@@ -260,7 +260,7 @@ filelist_init( void )
 	parent_w = file_clist_w->parent->parent;
 	gtk_widget_destroy( file_clist_w->parent );
 	file_clist_w = gui_clist_add( parent_w, 1, NULL );
-	gtk_signal_connect( GTK_OBJECT(file_clist_w), "button_press_event", GTK_SIGNAL_FUNC(filelist_select_cb), NULL );
+	g_signal_connect( GTK_OBJECT(file_clist_w), "button_press_event", G_CALLBACK(filelist_select_cb), NULL );
 
 	filelist_populate( root_dnode );
 

@@ -93,7 +93,7 @@ dirtree_select_cb( GtkWidget *ctree_w, GdkEventButton *ev_button )
 		camera_look_at( dnode );
 		/* Preempt the forthcoming tree expand/collapse
 		 * (the standard action spawned by a double-click) */
-		gtk_signal_emit_stop_by_name( GTK_OBJECT(ctree_w), "button_press_event" );
+		g_signal_stop_emission_by_name( GTK_OBJECT(ctree_w), "button_press_event" );
 		return TRUE;
 	}
 
@@ -179,9 +179,9 @@ dirtree_pass_widget( GtkWidget *ctree_w )
 	dir_ctree_w = ctree_w;
 
 	/* Connect signal handlers */
-	gtk_signal_connect( GTK_OBJECT(dir_ctree_w), "button_press_event", GTK_SIGNAL_FUNC(dirtree_select_cb), NULL );
-	gtk_signal_connect( GTK_OBJECT(dir_ctree_w), "tree_collapse", GTK_SIGNAL_FUNC(dirtree_collapse_cb), NULL );
-	gtk_signal_connect( GTK_OBJECT(dir_ctree_w), "tree_expand", GTK_SIGNAL_FUNC(dirtree_expand_cb), NULL );
+	g_signal_connect( GTK_OBJECT(dir_ctree_w), "button_press_event", G_CALLBACK(dirtree_select_cb), NULL );
+	g_signal_connect( GTK_OBJECT(dir_ctree_w), "tree_collapse", G_CALLBACK(dirtree_collapse_cb), NULL );
+	g_signal_connect( GTK_OBJECT(dir_ctree_w), "tree_expand", G_CALLBACK(dirtree_expand_cb), NULL );
 
 	dirtree_icons_init( );
 }
@@ -289,8 +289,8 @@ dirtree_entry_expanded( GNode *dnode )
 static void
 block_colexp_handlers( void )
 {
-	gtk_signal_handler_block_by_func( GTK_OBJECT(dir_ctree_w), GTK_SIGNAL_FUNC(dirtree_collapse_cb), NULL );
-	gtk_signal_handler_block_by_func( GTK_OBJECT(dir_ctree_w), GTK_SIGNAL_FUNC(dirtree_expand_cb), NULL );
+	g_signal_handlers_block_by_func( GTK_OBJECT(dir_ctree_w), G_CALLBACK(dirtree_collapse_cb), NULL );
+	g_signal_handlers_block_by_func( GTK_OBJECT(dir_ctree_w), G_CALLBACK(dirtree_expand_cb), NULL );
 }
 
 
@@ -298,8 +298,8 @@ block_colexp_handlers( void )
 static void
 unblock_colexp_handlers( void )
 {
-	gtk_signal_handler_unblock_by_func( GTK_OBJECT(dir_ctree_w), GTK_SIGNAL_FUNC(dirtree_collapse_cb), NULL );
-	gtk_signal_handler_unblock_by_func( GTK_OBJECT(dir_ctree_w), GTK_SIGNAL_FUNC(dirtree_expand_cb), NULL );
+	g_signal_handlers_unblock_by_func( GTK_OBJECT(dir_ctree_w), G_CALLBACK(dirtree_collapse_cb), NULL );
+	g_signal_handlers_unblock_by_func( GTK_OBJECT(dir_ctree_w), G_CALLBACK(dirtree_expand_cb), NULL );
 }
 
 

@@ -274,7 +274,7 @@ ogl_widget_new( void )
 	viewport_gl_area_w = gtk_gl_area_new( gl_area_attributes );
 
 	/* Initialize widget's GL state when realized */
-	gtk_signal_connect( GTK_OBJECT(viewport_gl_area_w), "realize", GTK_SIGNAL_FUNC(realize_cb), NULL );
+	g_signal_connect( GTK_OBJECT(viewport_gl_area_w), "realize", G_CALLBACK(realize_cb), NULL );
 
 	return viewport_gl_area_w;
 }

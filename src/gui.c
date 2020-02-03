@@ -211,7 +211,7 @@ gui_button_add( GtkWidget *parent_w, const char *label, void (*callback)( ), voi
 	button_w = gtk_button_new( );
 	if (label != NULL)
 		gui_label_add( button_w, label );
-	gtk_signal_connect( GTK_OBJECT(button_w), "clicked", GTK_SIGNAL_FUNC(callback), callback_data );
+	g_signal_connect( GTK_OBJECT(button_w), "clicked", G_CALLBACK(callback), callback_data );
 	parent_child( parent_w, button_w );
 
 	return button_w;
@@ -235,7 +235,7 @@ gui_button_with_pixmap_xpm_add( GtkWidget *parent_w, char **xpm_data, const char
 		gui_vbox_add( hbox2_w, 2 ); /* spacer */
 		gui_label_add( hbox2_w, label );
 	}
-	gtk_signal_connect( GTK_OBJECT(button_w), "clicked", GTK_SIGNAL_FUNC(callback), callback_data );
+	g_signal_connect( GTK_OBJECT(button_w), "clicked", G_CALLBACK(callback), callback_data );
 
 	return button_w;
 }
@@ -251,7 +251,7 @@ gui_toggle_button_add( GtkWidget *parent_w, const char *label, boolean active, v
 	if (label != NULL)
 		gui_label_add( tbutton_w, label );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(tbutton_w), active );
-	gtk_signal_connect( GTK_OBJECT(tbutton_w), "toggled", GTK_SIGNAL_FUNC(callback), callback_data );
+	g_signal_connect( GTK_OBJECT(tbutton_w), "toggled", G_CALLBACK(callback), callback_data );
 	parent_child( parent_w, tbutton_w );
 
 	return tbutton_w;
@@ -364,7 +364,7 @@ gui_colorpicker_add( GtkWidget *parent_w, RGBcolor *init_color, const char *titl
 	color.blue = (guint16) (init_color->b * 65535.0 + 0.5);
 	colorpicker_w = gtk_color_button_new_with_color( &color );
 	gtk_color_button_set_title( GTK_COLOR_BUTTON(colorpicker_w), title );
-	gtk_signal_connect( GTK_OBJECT(colorpicker_w), "color_set", GTK_SIGNAL_FUNC(color_picker_cb), callback_data );
+	g_signal_connect( GTK_OBJECT(colorpicker_w), "color_set", G_CALLBACK(color_picker_cb), callback_data );
 	gtk_object_set_data( GTK_OBJECT(colorpicker_w), "user_callback", (void *)callback );
 	parent_child( parent_w, colorpicker_w );
 
@@ -490,7 +490,7 @@ gui_entry_add( GtkWidget *parent_w, const char *init_text, void (*callback)( ), 
         if (init_text != NULL)
 		gtk_entry_set_text( GTK_ENTRY(entry_w), init_text );
 	if (callback != NULL )
-		gtk_signal_connect( GTK_OBJECT(entry_w), "activate", GTK_SIGNAL_FUNC(callback), callback_data );
+		g_signal_connect( GTK_OBJECT(entry_w), "activate", G_CALLBACK(callback), callback_data );
 	parent_child_full( parent_w, entry_w, EXPAND, FILL );
 
 	return entry_w;
@@ -663,7 +663,7 @@ gui_menu_item_add( GtkWidget *menu_w, const char *label, void (*callback)( ), vo
 	menu_item_w = gtk_menu_item_new_with_label( label );
 	gtk_menu_append( GTK_MENU(menu_w), menu_item_w );
 	if (callback != NULL)
-		gtk_signal_connect( GTK_OBJECT(menu_item_w), "activate", GTK_SIGNAL_FUNC(callback), callback_data );
+		g_signal_connect( GTK_OBJECT(menu_item_w), "activate", G_CALLBACK(callback), callback_data );
 	gtk_widget_show( menu_item_w );
 
 	return menu_item_w;
@@ -705,7 +705,7 @@ gui_radio_menu_item_add( GtkWidget *menu_w, const char *label, void (*callback)(
 		gtk_menu_append( GTK_MENU(menu_w), radmenu_item_w );
 		if (radmenu_item_num == init_selected)
 			gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(radmenu_item_w), TRUE );
-		gtk_signal_connect( GTK_OBJECT(radmenu_item_w), "toggled", GTK_SIGNAL_FUNC(callback), callback_data );
+		g_signal_connect( GTK_OBJECT(radmenu_item_w), "toggled", G_CALLBACK(callback), callback_data );
 		gtk_widget_show( radmenu_item_w );
 		++radmenu_item_num;
 	}
@@ -751,7 +751,7 @@ gui_option_menu_item( const char *label, void (*callback)( ), void *callback_dat
 
 	menu_item_w = gtk_menu_item_new_with_label( label );
 	if (callback != NULL)
-		gtk_signal_connect( GTK_OBJECT(menu_item_w), "activate", GTK_SIGNAL_FUNC(callback), callback_data );
+		g_signal_connect( GTK_OBJECT(menu_item_w), "activate", G_CALLBACK(callback), callback_data );
 	gui_option_menu_add( menu_item_w, NIL );
 
 	return menu_item_w;
@@ -915,8 +915,8 @@ gui_preview_spectrum( GtkWidget *preview_w, RGBcolor (*spectrum_func)( double x 
 
 	if (first_time) {
 		/* Attach draw callback */
-		gtk_signal_connect( GTK_OBJECT(preview_w), "expose_event", GTK_SIGNAL_FUNC(preview_spectrum_draw_cb), "expose" );
-		gtk_signal_connect( GTK_OBJECT(preview_w), "size_allocate", GTK_SIGNAL_FUNC(preview_spectrum_draw_cb), "size" );
+		g_signal_connect( GTK_OBJECT(preview_w), "expose_event", G_CALLBACK(preview_spectrum_draw_cb), "expose" );
+		g_signal_connect( GTK_OBJECT(preview_w), "size_allocate", G_CALLBACK(preview_spectrum_draw_cb), "size" );
 	}
 	else
 		preview_spectrum_draw_cb( preview_w, NULL, "redraw" );
@@ -1120,8 +1120,8 @@ gui_colorsel_window( const char *title, RGBcolor *init_color, void (*ok_callback
 	gtk_widget_hide( csd->help_button );
 	gtk_object_set_data( GTK_OBJECT(colorsel_window_w), "user_callback", (void *)ok_callback );
 	gtk_object_set_data( GTK_OBJECT(colorsel_window_w), "user_callback_data", ok_callback_data );
-	gtk_signal_connect_object( GTK_OBJECT(csd->ok_button), "clicked", GTK_SIGNAL_FUNC(colorsel_window_cb), GTK_OBJECT(colorsel_window_w) );
-	gtk_signal_connect_object( GTK_OBJECT(csd->cancel_button), "clicked", GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(colorsel_window_w) );
+	g_signal_connect_swapped( GTK_OBJECT(csd->ok_button), "clicked", G_CALLBACK(colorsel_window_cb), GTK_OBJECT(colorsel_window_w) );
+	g_signal_connect_swapped( GTK_OBJECT(csd->cancel_button), "clicked", G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(colorsel_window_w) );
 	gtk_widget_show( colorsel_window_w );
 
 	if (gtk_grab_get_current( ) != NULL)
@@ -1142,9 +1142,9 @@ gui_dialog_window( const char *title, void (*close_callback)( ) )
 	gtk_window_set_policy( GTK_WINDOW(window_w), FALSE, FALSE, FALSE );
 	gtk_window_set_position( GTK_WINDOW(window_w), GTK_WIN_POS_CENTER );
 	gtk_window_set_title( GTK_WINDOW(window_w), title );
-	gtk_signal_connect( GTK_OBJECT(window_w), "delete_event", GTK_SIGNAL_FUNC(gtk_widget_destroy), NULL );
+	g_signal_connect( GTK_OBJECT(window_w), "delete_event", G_CALLBACK(gtk_widget_destroy), NULL );
 	if (close_callback != NULL)
-		gtk_signal_connect( GTK_OBJECT(window_w), "destroy", GTK_SIGNAL_FUNC(close_callback), NULL );
+		g_signal_connect( GTK_OBJECT(window_w), "destroy", G_CALLBACK(close_callback), NULL );
 	/* !gtk_widget_show( ) */
 
 	return window_w;
@@ -1210,7 +1210,7 @@ gui_entry_window( const char *title, const char *init_text, void (*ok_callback)(
 	gui_button_add( hbox_w, _("OK"), entry_window_cb, entry_window_w );
 	vbox_w = gui_vbox_add( hbox_w, 0 ); /* spacer */
 	button_w = gui_button_add( hbox_w, _("Cancel"), NULL, NULL );
-	gtk_signal_connect_object( GTK_OBJECT(button_w), "clicked", GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(entry_window_w) );
+	g_signal_connect_swapped( GTK_OBJECT(button_w), "clicked", G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(entry_window_w) );
 
 	gtk_widget_show( entry_window_w );
 	gtk_widget_grab_focus( entry_w );
@@ -1256,9 +1256,9 @@ gui_filesel_window( const char *title, const char *init_filename, void (*ok_call
 	gtk_window_set_position( GTK_WINDOW(filesel_window_w), GTK_WIN_POS_CENTER );
 	gtk_object_set_data( GTK_OBJECT(filesel_window_w), "user_callback", (void *)ok_callback );
 	gtk_object_set_data( GTK_OBJECT(filesel_window_w), "user_callback_data", ok_callback_data );
-	gtk_signal_connect_object( GTK_OBJECT(GTK_FILE_SELECTION(filesel_window_w)->ok_button), "clicked", GTK_SIGNAL_FUNC(filesel_window_cb), GTK_OBJECT(filesel_window_w) );
-	gtk_signal_connect_object( GTK_OBJECT(GTK_FILE_SELECTION(filesel_window_w)->cancel_button), "clicked", GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(filesel_window_w) );
-	gtk_signal_connect_object( GTK_OBJECT(GTK_FILE_SELECTION(filesel_window_w)->cancel_button), "delete_event", GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(filesel_window_w) );
+	g_signal_connect_swapped( GTK_OBJECT(GTK_FILE_SELECTION(filesel_window_w)->ok_button), "clicked", G_CALLBACK(filesel_window_cb), GTK_OBJECT(filesel_window_w) );
+	g_signal_connect_swapped( GTK_OBJECT(GTK_FILE_SELECTION(filesel_window_w)->cancel_button), "clicked", G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(filesel_window_w) );
+	g_signal_connect_swapped( GTK_OBJECT(GTK_FILE_SELECTION(filesel_window_w)->cancel_button), "delete_event", G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(filesel_window_w) );
         /* no gtk_widget_show( ) */
 
 	if (gtk_grab_get_current( ) != NULL)
@@ -1303,7 +1303,7 @@ gui_window_modalize( GtkWidget *window_w, GtkWidget *parent_window_w )
 	gui_cursor( parent_window_w, GDK_X_CURSOR );
 
 	/* Restore original state once the window is destroyed */
-	gtk_signal_connect( GTK_OBJECT(window_w), "destroy", GTK_SIGNAL_FUNC(window_unmodalize), parent_window_w );
+	g_signal_connect( GTK_OBJECT(window_w), "destroy", G_CALLBACK(window_unmodalize), parent_window_w );
 }
 
 
@@ -1322,7 +1322,7 @@ gui_check_button_add( GtkWidget *parent_w, const char *label, boolean init_state
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(cbutton_w), init_state );
 	gtk_toggle_button_set_mode( GTK_TOGGLE_BUTTON(cbutton_w), TRUE );
 	if (callback != NULL)
-		gtk_signal_connect( GTK_OBJECT(cbutton_w), "toggled", GTK_SIGNAL_FUNC(callback), callback_data );
+		g_signal_connect( GTK_OBJECT(cbutton_w), "toggled", G_CALLBACK(callback), callback_data );
 	parent_child( parent_w, cbutton_w );
 
 	return cbutton_w;
@@ -1339,7 +1339,7 @@ gui_check_menu_item_add( GtkWidget *menu_w, const char *label, boolean init_stat
 	gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(chkmenu_item_w), init_state );
 	gtk_check_menu_item_set_show_toggle( GTK_CHECK_MENU_ITEM(chkmenu_item_w), TRUE );
 	gtk_menu_append( GTK_MENU(menu_w), chkmenu_item_w );
-	gtk_signal_connect( GTK_OBJECT(chkmenu_item_w), "toggled", GTK_SIGNAL_FUNC(callback), callback_data );
+	g_signal_connect( GTK_OBJECT(chkmenu_item_w), "toggled", G_CALLBACK(callback), callback_data );
 	gtk_widget_show( chkmenu_item_w );
 
 	return chkmenu_item_w;

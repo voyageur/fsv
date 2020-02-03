@@ -355,8 +355,8 @@ camera_pass_scrollbar_widgets( GtkWidget *x_scrollbar_w, GtkWidget *y_scrollbar_
 	y_scrollbar_adj = GTK_RANGE(y_scrollbar_w)->adjustment;
 
 	/* Connect signal handlers */
-	gtk_signal_connect( GTK_OBJECT(x_scrollbar_adj), "value_changed", GTK_SIGNAL_FUNC(camera_scrollbar_move_cb), x_axis_mesg );
-	gtk_signal_connect( GTK_OBJECT(y_scrollbar_adj), "value_changed", GTK_SIGNAL_FUNC(camera_scrollbar_move_cb), y_axis_mesg );
+	g_signal_connect( GTK_OBJECT(x_scrollbar_adj), "value_changed", G_CALLBACK(camera_scrollbar_move_cb), x_axis_mesg );
+	g_signal_connect( GTK_OBJECT(y_scrollbar_adj), "value_changed", G_CALLBACK(camera_scrollbar_move_cb), y_axis_mesg );
 }
 
 
@@ -604,14 +604,14 @@ camera_update_scrollbars( boolean hard_update )
 
 	/* Update the scrollbar widgets */
 	if (hard_update || !gui_adjustment_widget_busy( x_scrollbar_adj )) {
-		gtk_signal_handler_block_by_func( GTK_OBJECT(x_scrollbar_adj), GTK_SIGNAL_FUNC(camera_scrollbar_move_cb), x_axis_mesg );
-		gtk_signal_emit_by_name( GTK_OBJECT(x_scrollbar_adj), "changed" );
-		gtk_signal_handler_unblock_by_func( GTK_OBJECT(x_scrollbar_adj), GTK_SIGNAL_FUNC(camera_scrollbar_move_cb), x_axis_mesg );
+		g_signal_handlers_block_by_func( GTK_OBJECT(x_scrollbar_adj), G_CALLBACK(camera_scrollbar_move_cb), x_axis_mesg );
+		g_signal_emit_by_name( GTK_OBJECT(x_scrollbar_adj), "changed" );
+		g_signal_handlers_unblock_by_func( GTK_OBJECT(x_scrollbar_adj), G_CALLBACK(camera_scrollbar_move_cb), x_axis_mesg );
 	}
 	if (hard_update || !gui_adjustment_widget_busy( y_scrollbar_adj )) {
-		gtk_signal_handler_block_by_func( GTK_OBJECT(y_scrollbar_adj), GTK_SIGNAL_FUNC(camera_scrollbar_move_cb), y_axis_mesg );
-		gtk_signal_emit_by_name( GTK_OBJECT(y_scrollbar_adj), "changed" );
-		gtk_signal_handler_unblock_by_func( GTK_OBJECT(y_scrollbar_adj), GTK_SIGNAL_FUNC(camera_scrollbar_move_cb), y_axis_mesg );
+		g_signal_handlers_block_by_func( GTK_OBJECT(y_scrollbar_adj), G_CALLBACK(camera_scrollbar_move_cb), y_axis_mesg );
+		g_signal_emit_by_name( GTK_OBJECT(y_scrollbar_adj), "changed" );
+		g_signal_handlers_unblock_by_func( GTK_OBJECT(y_scrollbar_adj), G_CALLBACK(camera_scrollbar_move_cb), y_axis_mesg );
 	}
 }
 
