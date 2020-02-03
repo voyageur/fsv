@@ -98,7 +98,7 @@ void gui_widget_packing( GtkWidget *widget, boolean expand, boolean fill, boolea
 GtkWidget *gui_colorsel_window( const char *title, RGBcolor *init_color, void (*ok_callback)( ), void *ok_callback_data );
 GtkWidget *gui_dialog_window( const char *title, void (*close_callback )( ) );
 GtkWidget *gui_entry_window( const char *title, const char *init_text, void (*ok_callback)( ), void *ok_callback_data );
-GtkWidget *gui_filesel_window( const char *title, const char *init_filename, void (*ok_callback)( ), void *ok_callback_data );
+GtkWidget *gui_filesel_window( const char *title, const char *init_filename );
 void gui_window_icon_xpm( GtkWidget *window_w, char **xpm_data );
 void gui_window_modalize( GtkWidget *window_w, GtkWidget *parent_window_w );
 #endif /* __GTK_H__ */

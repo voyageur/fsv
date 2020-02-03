@@ -107,18 +107,19 @@ dialog_change_root( void )
 	gui_cursor( main_window_w, GDK_WATCH );
 	gui_update( );
 
-	filesel_window_w = gui_filesel_window( _("Change Root Directory"), dir, change_root_cb, NULL );
+	filesel_window_w = gui_filesel_window( _("Change Root Directory"), dir);
 	xfree( dir );
 
 	gui_cursor( main_window_w, -1 );
 	gui_update( );
 
 	gui_window_modalize( filesel_window_w, main_window_w );
-	gtk_file_selection_hide_fileop_buttons( GTK_FILE_SELECTION(filesel_window_w) );
-	/* Disable filesel's file list to make it a directory chooser */
-	gtk_widget_set_sensitive( GTK_FILE_SELECTION(filesel_window_w)->file_list, FALSE );
 
-	gtk_widget_show( filesel_window_w );
+	if (gtk_dialog_run( GTK_DIALOG(filesel_window_w) ) == GTK_RESPONSE_ACCEPT ) {
+		change_root_cb(gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (filesel_window_w)));
+	}
+
+	gtk_widget_destroy( filesel_window_w );
 }
 
 
